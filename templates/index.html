@@ -6,11 +6,14 @@
   <title>LocaFind - Find Smarter, Explore Better</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <style>
     * { font-family: 'Inter', sans-serif; }
     .hero-bg {
       background-image: linear-gradient(to right, rgba(30, 64, 175, 0.85) 40%, rgba(30, 64, 175, 0.3) 100%),
-        url("{{ url_for('static', filename='images/hero.jpg') }}");
+        url("{{ url_for('static', filename='images/Frame 63.png') }}");
       background-size: cover;
       background-position: center;
     }
@@ -21,6 +24,18 @@
       background-position: center;
     }
     .category-card:hover { transform: scale(1.03); transition: 0.2s; }
+    .flatpickr-input{
+        cursor:pointer;
+    }
+
+    .flatpickr-time{
+        font-size:16px;
+    }
+
+    .flatpickr-hour,
+    .flatpickr-minute{
+        font-weight:600;
+    }
   </style>
 </head>
 <body class="bg-white text-gray-800">
@@ -66,6 +81,9 @@
         <p class="text-center text-gray-500 text-sm mb-6">Ceritakan liburan impianmu! Atau gunakan filter di bawah jika butuh bantuan sistem.</p>
         
         <form id="itinerary-form" action="/recommend" method="POST">
+          <input type="hidden" name="latitude" value="-7.265125403961542">
+          <input type="hidden" name="longitude" value="112.7847387956772">
+          <!-- Lokasi User -->
           <div class="grid grid-cols-3 gap-6 mb-4">
             
             <div>
@@ -83,7 +101,7 @@
                     <input type="checkbox" name="kategori" value="cafe" class="accent-blue-700 w-4 h-4 checkbox-kategori" checked> Cafe
                   </label>
                   <label class="flex items-center gap-1 text-sm text-gray-600 cursor-pointer">
-                    <input type="checkbox" name="kategori" value="Pusat Perbelanjaan" class="accent-blue-700 w-4 h-4 checkbox-kategori"> Mall
+                    <input type="checkbox" name="kategori" value="pusat perbelanjaan" class="accent-blue-700 w-4 h-4 checkbox-kategori"> Mall
                   </label>
                 </div>
               </div>
@@ -118,8 +136,7 @@
             <!-- Alert Dinamis -->
             <p id="prompt-warning" class="hidden text-xs p-2 rounded mt-2 border font-semibold transition-all"></p>
           </div>
-
-          <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 rounded-xl text-base transition">
+          <button id="submitBtn" type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 rounded-xl text-base transition disabled:bg-gray-400 disabled:cursor-not-allowed">
             Generate Itinerary AI 🚀
           </button>
         </form>
@@ -267,6 +284,23 @@
         }
       }
     });
+  flatpickr("#start-time", {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "H:i",
+      time_24hr: true,
+      defaultHour: 8,
+      defaultMinute: 0
+  });
+
+  flatpickr("#end-time", {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "H:i",
+      time_24hr: true,
+      defaultHour: 20,
+      defaultMinute: 0
+  });
   </script>
 </body>
 </html>

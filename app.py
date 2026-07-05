@@ -1,4 +1,5 @@
 import math
+import os
 from flask import Flask, render_template, request
 from datetime import datetime, timedelta
 import re
@@ -7,6 +8,27 @@ from src.engine_final import LocaFindEngine
 app = Flask(__name__)
 engine = LocaFindEngine()
 
+def get_image_filename(no):
+    """
+    Mencari file gambar berdasarkan nomor.
+    Mendukung jpg, jpeg, png, webp.
+    """
+
+    folder = os.path.join(app.static_folder, "static_1")
+
+    extensions = ["jpg", "jpeg", "png", "webp"]
+
+    for ext in extensions:
+
+        filename = f"{no}.{ext}"
+
+        full_path = os.path.join(folder, filename)
+
+        if os.path.exists(full_path):
+            return f"static_1/{filename}"
+
+    # jika gambar tidak ditemukan
+    return "images/hero.jpg"
 # ==========================
 # FUNGSI NLP
 # ==========================
@@ -163,9 +185,23 @@ def recommend():
     # Variabel Itinerary
     # ==========================
 
-    current_lat = -7.2600
-    current_lon = 112.7400
+    # ==========================
+    # Starting Location
+    # ==========================
+    # ==================================
+    # Lokasi awal (sementara untuk testing)
+    # ==================================
 
+    current_lat = -7.265125403961542
+    current_lon = 112.7847387956772
+
+    print("=" * 50)
+    print("Menggunakan lokasi default")
+    print("LAT =", current_lat)
+    print("LON =", current_lon)
+    print("=" * 50)
+    user_lat = current_lat
+    user_lon = current_lon
     current_time = start_dt
 
     visited = []
@@ -348,6 +384,8 @@ def recommend():
 
             'ID': int(dest['No']) if 'No' in dest else len(hasil_itinerary)+1,
 
+            'Image': get_image_filename(int(dest['No']) if 'No' in dest else len(hasil_itinerary)+1),
+
             'Place_Name': dest['Place_Name'],
 
             'Category': dest['Category'],
@@ -388,14 +426,38 @@ def recommend():
 
         total_jarak += dest["Jarak"]
         total_biaya += harga
+    
+    starting_point = {
+        "Lat": user_lat,
+        "Lon": user_lon
+    }
+
+    maps_url = (
+        f"https://www.google.com/maps/dir/"
+        f"{user_lat},{user_lon}/"
+    )
+
+    for item in hasil_itinerary:
+        maps_url += f"{item['Lat']},{item['Long']}/"
 
     return render_template(
+
         "hasil.html",
+
         itinerary=hasil_itinerary,
-        total_jarak=round(total_jarak, 1),
+
+        total_jarak=round(total_jarak,1),
+
         total_budget=total_biaya,
+
         budget_awal=budget,
-        remaining_budget=remaining_budget
+
+        remaining_budget=remaining_budget,
+
+        starting_point=starting_point,
+        
+        maps_url=maps_url
+
     )
 
 

@@ -74,6 +74,29 @@ class LocaFindEngine:
             ),
             axis=1
         )
+        # ==========================
+        # Popularity Score
+        # ==========================
+
+        df_res["Rating"] = pd.to_numeric(
+            df_res["Rating"],
+            errors="coerce"
+        ).fillna(0)
+
+        review_max = df_res["Review_count"].max()
+
+        if review_max == 0:
+            review_max = 1
+
+        df_res["Review_Score"] = (
+            df_res["Review_count"] / review_max
+        )
+
+        df_res["Popularity"] = (
+            (0.4 * df_res["Rating"] / 5)
+            +
+            (0.6 * df_res["Review_Score"])
+        )
         # ==========================================================
         # 5. NORMALISASI RATING
         # ==========================================================
@@ -126,11 +149,11 @@ class LocaFindEngine:
 
         df_res["Final_Score"] = (
 
-            0.55 * df_res["Skor_AI"]
+            0.50 * df_res["Skor_AI"]
 
             +
 
-            0.20 * df_res["Rating_Norm"]
+            0.15 * df_res["Rating_Norm"]
 
             +
 
@@ -138,7 +161,7 @@ class LocaFindEngine:
 
             +
 
-            0.10 * df_res["Distance_Norm"]
+            0.20 * df_res["Distance_Norm"]
 
             +
 

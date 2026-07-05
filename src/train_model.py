@@ -9,7 +9,7 @@ os.makedirs("models", exist_ok=True)
 
 print("Memuat dan membersihkan dataset...")
 # MENGGUNAKAN read_csv KARENA FILENYA .csv
-df = pd.read_csv("data/Dataset LocaFind - data700+.csv") 
+df = pd.read_csv("data/Dataset LocaFind - surabaya_tourism.csv") 
 df.columns = df.columns.str.strip()
 
 def fix_price(val):
