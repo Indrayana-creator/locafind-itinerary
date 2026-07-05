@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LocaFind - Daftar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    .hero-bg {
+      background-image: linear-gradient(to right, rgba(30, 64, 175, 0.92) 45%, rgba(30, 64, 175, 0.4) 100%),
+        url('hero.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+
+  <!-- NAVBAR -->
+  <nav class="bg-blue-700 px-8 py-3 flex items-center justify-between fixed w-full top-0 z-50 shadow">
+    <div class="flex items-center gap-2">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 2C10.477 2 6 6.477 6 12C6 19 16 30 16 30C16 30 26 19 26 12C26 6.477 21.523 2 16 2Z" fill="white"/>
+        <circle cx="16" cy="12" r="5" fill="#1d4ed8"/>
+        <circle cx="16" cy="12" r="2.5" fill="white"/>
+      </svg>
+      <span class="text-white font-black text-lg tracking-tight"><span class="text-blue-200">Loca</span>Find</span>
+    </div>
+    <div class="flex items-center gap-8">
+      <a href="index.html" class="text-white font-medium hover:text-blue-200">Home</a>
+      <a href="login.html" class="text-white font-medium hover:text-blue-200">Login</a>
+    </div>
+  </nav>
+
+  <div class="min-h-screen flex pt-14">
+    <!-- LEFT: Form -->
+    <div class="w-full md:w-1/2 flex items-center justify-center px-8 py-16">
+      <div class="w-full max-w-md">
+        <!-- Logo -->
+        <div class="flex items-center gap-3 mb-8">
+          <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 2C10.477 2 6 6.477 6 12C6 19 16 30 16 30C16 30 26 19 26 12C26 6.477 21.523 2 16 2Z" fill="#1d4ed8"/>
+            <circle cx="16" cy="12" r="5" fill="white"/>
+            <circle cx="16" cy="12" r="2.5" fill="#1d4ed8"/>
+          </svg>
+          <span class="font-black text-2xl"><span class="text-blue-600">Loca</span><span class="text-blue-900">Find</span></span>
+        </div>
+
+        <h1 class="text-3xl font-black text-gray-800 mb-1">Buat Akun Baru</h1>
+        <p class="text-gray-500 text-sm mb-8">Daftar gratis dan mulai rencanakan perjalananmu!</p>
+
+        <div class="flex flex-col gap-4">
+          <div>
+            <label class="block text-blue-600 text-sm font-semibold mb-2">Nama Lengkap</label>
+            <div class="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-3 bg-white focus-within:border-blue-500 transition">
+              <span class="text-gray-400">👤</span>
+              <input type="text" placeholder="Nama kamu" class="flex-1 text-sm text-gray-700 outline-none bg-transparent"/>
+            </div>
+          </div>
+          <div>
+            <label class="block text-blue-600 text-sm font-semibold mb-2">Email</label>
+            <div class="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-3 bg-white focus-within:border-blue-500 transition">
+              <span class="text-gray-400">✉️</span>
+              <input type="email" placeholder="emailkamu@gmail.com" class="flex-1 text-sm text-gray-700 outline-none bg-transparent"/>
+            </div>
+          </div>
+          <div>
+            <label class="block text-blue-600 text-sm font-semibold mb-2">Password</label>
+            <div class="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-3 bg-white focus-within:border-blue-500 transition">
+              <span class="text-gray-400">🔒</span>
+              <input type="password" placeholder="Minimal 8 karakter" class="flex-1 text-sm text-gray-700 outline-none bg-transparent"/>
+            </div>
+          </div>
+          <div>
+            <label class="block text-blue-600 text-sm font-semibold mb-2">Konfirmasi Password</label>
+            <div class="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-3 bg-white focus-within:border-blue-500 transition">
+              <span class="text-gray-400">🔒</span>
+              <input type="password" placeholder="Ulangi password kamu" class="flex-1 text-sm text-gray-700 outline-none bg-transparent"/>
+            </div>
+          </div>
+          <label class="flex items-start gap-2 text-sm text-gray-500 cursor-pointer mt-1">
+            <input type="checkbox" class="accent-blue-700 mt-0.5"/>
+            <span>Saya setuju dengan <a href="#" class="text-blue-600 font-semibold hover:underline">Syarat & Ketentuan</a> LocaFind</span>
+          </label>
+          <a href="login.html">
+            <button class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 rounded-xl text-base transition mt-2">
+              Daftar Sekarang
+            </button>
+          </a>
+          <p class="text-center text-sm text-gray-500 mt-2">
+            Sudah punya akun?
+            <a href="login.html" class="text-blue-600 font-semibold hover:underline">Masuk di sini</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Visual -->
+    <div class="hidden md:flex w-1/2 hero-bg items-center justify-center px-12">
+      <div class="text-center">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <svg width="52" height="52" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 2C10.477 2 6 6.477 6 12C6 19 16 30 16 30C16 30 26 19 26 12C26 6.477 21.523 2 16 2Z" fill="white"/>
+            <circle cx="16" cy="12" r="5" fill="#1d4ed8"/>
+            <circle cx="16" cy="12" r="2.5" fill="white"/>
+          </svg>
+          <h2 class="text-white text-5xl font-black"><span class="text-blue-200">Loca</span>Find</h2>
+        </div>
+        <div class="w-16 h-1 bg-white mx-auto mb-4"></div>
+        <p class="text-blue-100 text-base leading-relaxed">Temukan Wisata & Kuliner Surabaya<br/>dengan Itinerary Otomatis Berbasis AI</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
