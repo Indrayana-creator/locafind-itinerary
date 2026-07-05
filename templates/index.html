@@ -7,8 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <style>
     * { font-family: 'Inter', sans-serif; }
     .hero-bg {
@@ -23,23 +22,18 @@
       background-size: cover;
       background-position: center;
     }
-    .category-card:hover { transform: scale(1.03); transition: 0.2s; }
-    .flatpickr-input{
-        cursor:pointer;
-    }
-
-    .flatpickr-time{
-        font-size:16px;
-    }
-
-    .flatpickr-hour,
-    .flatpickr-minute{
-        font-weight:600;
-    }
+    .category-card { transition: transform 0.2s, box-shadow 0.2s; }
+    .category-card:hover { transform: scale(1.03); box-shadow: 0 12px 24px -6px rgba(29,78,216,0.35); }
+    .field-box { transition: border-color 0.15s, box-shadow 0.15s; }
+    .field-box:focus-within { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+    .flatpickr-input { cursor: pointer; }
+    .flatpickr-time { font-size: 16px; }
+    .flatpickr-hour, .flatpickr-minute { font-weight: 600; }
   </style>
 </head>
 <body class="bg-white text-gray-800">
 
+  <!-- NAVBAR -->
   <nav class="bg-blue-700 px-8 py-3 flex items-center justify-between fixed w-full top-0 z-50 shadow">
     <div class="flex items-center gap-2">
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -50,120 +44,134 @@
       <span class="text-white font-black text-lg tracking-tight"><span class="text-blue-200">Loca</span>Find</span>
     </div>
     <div class="flex items-center gap-8">
-      <a href="index.html" class="text-white font-medium hover:text-blue-200">Home</a>
-      <a href="login.html" class="text-white font-medium hover:text-blue-200">Login</a>
+      <a href="/" class="text-white font-medium hover:text-blue-200">Home</a>
     </div>
   </nav>
 
-  <section class="hero-bg min-h-screen flex items-center pt-14">
-    <div class="max-w-7xl mx-auto px-8 w-full flex items-center justify-between py-20">
+  <!-- HERO -->
+  <section class="hero-bg pt-14">
+    <div class="max-w-7xl mx-auto px-8 py-16 flex items-center justify-between">
       <div class="max-w-lg">
-        <div class="flex items-center gap-3 mb-4">
-          <svg width="52" height="52" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div class="flex items-center gap-3 mb-3">
+          <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 2C10.477 2 6 6.477 6 12C6 19 16 30 16 30C16 30 26 19 26 12C26 6.477 21.523 2 16 2Z" fill="white"/>
             <circle cx="16" cy="12" r="5" fill="#1d4ed8"/>
             <circle cx="16" cy="12" r="2.5" fill="white"/>
           </svg>
-          <h1 class="text-white text-6xl font-black leading-tight"><span class="text-blue-200">Loca</span>Find</h1>
+          <h1 class="text-white text-5xl font-black leading-tight"><span class="text-blue-200">Loca</span>Find</h1>
         </div>
-        <div class="w-16 h-1 bg-white mb-4"></div>
-        <p class="text-white text-base leading-relaxed">Temukan Wisata & Kuliner Surabaya<br/>dengan Itinerary Otomatis Berbasis AI</p>
+        <div class="w-14 h-1 bg-white mb-3"></div>
+        <p class="text-white text-sm leading-relaxed">Temukan Wisata & Kuliner Surabaya<br/>dengan Itinerary Otomatis Berbasis AI</p>
       </div>
       <div class="text-right hidden md:block">
-        <h2 class="text-white text-5xl font-black leading-tight">Find Smarter<br/>Explore Better</h2>
+        <h2 class="text-white text-4xl font-black leading-tight">Find Smarter<br/>Explore Better</h2>
       </div>
     </div>
   </section>
 
-  <section class="bg-white py-0 relative">
-    <div class="max-w-4xl mx-auto px-6 -mt-16 relative z-10">
-      <div class="bg-white rounded-2xl shadow-2xl p-8">
-        <p class="text-center text-gray-500 text-sm mb-6">Ceritakan liburan impianmu! Atau gunakan filter di bawah jika butuh bantuan sistem.</p>
-        
+  <!-- FORM PENCARIAN -->
+  <section class="bg-white relative">
+    <div class="max-w-4xl mx-auto px-6 -mt-10 relative z-10">
+      <div class="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+        <p class="text-center text-blue-700 font-semibold text-base mb-6">
+          Masukkan budget, waktu perjalanan, dan preferensi. LocaFind akan menyusun itinerary terbaik untukmu
+        </p>
+        <hr class="border-gray-200 mb-6"/>
+
         <form id="itinerary-form" action="/recommend" method="POST">
           <input type="hidden" name="latitude" value="-7.265125403961542">
           <input type="hidden" name="longitude" value="112.7847387956772">
-          <!-- Lokasi User -->
-          <div class="grid grid-cols-3 gap-6 mb-4">
-            
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
+
+            <!-- Kategori -->
             <div>
-              <label class="block text-blue-600 text-sm font-semibold mb-2">Kategori Cadangan</label>
-              <div class="flex items-center gap-3 border border-gray-200 rounded-lg px-3 py-2">
-                <span class="text-blue-500">📍</span>
-                <div class="flex flex-1 gap-2">
-                  <label class="flex items-center gap-1 text-sm text-gray-600 cursor-pointer">
-                    <input type="checkbox" name="kategori" value="wisata" class="accent-blue-700 w-4 h-4 checkbox-kategori" checked> Wisata
+              <label class="block text-blue-600 text-sm font-semibold mb-2">Kategori</label>
+              <div class="field-box flex items-center gap-3 border border-gray-200 rounded-xl px-4 py-3 bg-white shadow-sm min-h-[50px]">
+                <span class="text-blue-500 text-lg shrink-0">📍</span>
+                <div class="flex flex-wrap gap-x-3 gap-y-1.5">
+                  <label class="flex items-center gap-1.5 text-xs font-medium text-gray-600 cursor-pointer">
+                    <input type="checkbox" name="kategori" value="wisata" class="accent-blue-700 w-3.5 h-3.5 checkbox-kategori" checked> Wisata
                   </label>
-                  <label class="flex items-center gap-1 text-sm text-gray-600 cursor-pointer">
-                    <input type="checkbox" name="kategori" value="kuliner" class="accent-blue-700 w-4 h-4 checkbox-kategori" checked> Kuliner
+                  <label class="flex items-center gap-1.5 text-xs font-medium text-gray-600 cursor-pointer">
+                    <input type="checkbox" name="kategori" value="kuliner" class="accent-blue-700 w-3.5 h-3.5 checkbox-kategori" checked> Kuliner
                   </label>
-                  <label class="flex items-center gap-1 text-sm text-gray-600 cursor-pointer">
-                    <input type="checkbox" name="kategori" value="cafe" class="accent-blue-700 w-4 h-4 checkbox-kategori" checked> Cafe
+                  <label class="flex items-center gap-1.5 text-xs font-medium text-gray-600 cursor-pointer">
+                    <input type="checkbox" name="kategori" value="cafe" class="accent-blue-700 w-3.5 h-3.5 checkbox-kategori" checked> Cafe
                   </label>
-                  <label class="flex items-center gap-1 text-sm text-gray-600 cursor-pointer">
-                    <input type="checkbox" name="kategori" value="pusat perbelanjaan" class="accent-blue-700 w-4 h-4 checkbox-kategori"> Mall
+                  <label class="flex items-center gap-1.5 text-xs font-medium text-gray-600 cursor-pointer">
+                    <input type="checkbox" name="kategori" value="pusat perbelanjaan" class="accent-blue-700 w-3.5 h-3.5 checkbox-kategori"> Mall
                   </label>
                 </div>
               </div>
             </div>
 
+            <!-- Budget -->
             <div>
-              <label class="block text-blue-600 text-sm font-semibold mb-2">Budget Wisata (Rp)</label>
-              <div class="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2">
-                <span>💰</span>
-                <!-- Required dihilangkan secara default -->
-                <input type="number" id="budget-input" name="budget" placeholder="Misal: 150000" class="flex-1 text-sm text-gray-600 outline-none" />
+              <label class="block text-blue-600 text-sm font-semibold mb-2">Budget Wisata</label>
+              <div class="field-box flex items-center gap-3 border border-gray-200 rounded-xl px-4 py-3 bg-white shadow-sm h-[50px]">
+                <span class="text-lg shrink-0">💰</span>
+                <input type="number" id="budget-input" name="budget" placeholder="Misal: 150000"
+                  class="flex-1 text-sm text-gray-700 outline-none bg-transparent min-w-0"/>
               </div>
             </div>
-            
+
+            <!-- Durasi -->
             <div>
               <label class="block text-blue-600 text-sm font-semibold mb-2">Durasi Perjalanan</label>
-              <div class="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2">
-                <span>🕐</span>
-                <input type="time" id="start-time" name="start_time" class="text-sm text-gray-600 outline-none w-20"/>
-                <span class="text-gray-400">—</span>
-                <span>🕐</span>
-                <input type="time" id="end-time" name="end_time" class="text-sm text-gray-600 outline-none w-20"/>
+              <div class="flex items-center gap-2">
+                <div class="field-box flex-1 flex items-center justify-center gap-2 border border-gray-200 rounded-xl px-3 py-3 bg-white shadow-sm h-[50px]">
+                  <span class="text-base shrink-0">🕐</span>
+                  <input type="time" id="start-time" name="start_time" class="text-sm text-gray-700 outline-none bg-transparent w-full text-center"/>
+                </div>
+                <span class="text-gray-400 font-semibold shrink-0">—</span>
+                <div class="field-box flex-1 flex items-center justify-center gap-2 border border-gray-200 rounded-xl px-3 py-3 bg-white shadow-sm h-[50px]">
+                  <span class="text-base shrink-0">🕐</span>
+                  <input type="time" id="end-time" name="end_time" class="text-sm text-gray-700 outline-none bg-transparent w-full text-center"/>
+                </div>
               </div>
             </div>
           </div>
-          
-          <div class="mb-6 relative">
+
+
+          <div class="mb-2 relative">
             <label class="block text-blue-600 text-sm font-semibold mb-2 text-center">Preferensi Tempat (Wajib Diisi)</label>
-            <textarea id="narration" name="narration" rows="3" placeholder="Ceritakan sedetail mungkin! Contoh: Aku pengen wisata alam dari jam 08:00, trus lanjut makan siang budget 50 ribu..."
-              class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-600 outline-none resize-none focus:border-blue-400" required></textarea>
-            
-            <!-- Alert Dinamis -->
+            <textarea id="narration" name="narration" rows="3"
+              placeholder="Ceritakan sedetail mungkin! Contoh: Aku pengen wisata alam dari jam 08:00, trus lanjut makan siang budget 50 ribu..."
+              class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-600 outline-none resize-none bg-gray-50 focus:border-blue-400 focus:bg-white transition" required></textarea>
+
             <p id="prompt-warning" class="hidden text-xs p-2 rounded mt-2 border font-semibold transition-all"></p>
           </div>
-          <button id="submitBtn" type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 rounded-xl text-base transition disabled:bg-gray-400 disabled:cursor-not-allowed">
-            Generate Itinerary AI 🚀
-          </button>
         </form>
-        
       </div>
+
+      <!-- TOMBOL CARI -->
+      <button form="itinerary-form" id="submitBtn" type="submit"
+        class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 rounded-xl text-base transition disabled:bg-gray-400 disabled:cursor-not-allowed mt-6 shadow-lg">
+        Cari Tempat Wisata 🚀
+      </button>
     </div>
   </section>
 
   <!-- FITUR -->
   <section class="py-16 bg-white">
-    <div class="max-w-5xl mx-auto px-6 grid grid-cols-3 gap-6">
+    <div class="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="bg-blue-700 rounded-2xl p-6 text-white flex gap-4 items-start">
-        <div class="text-3xl mt-1">📍</div>
+        <img src="{{ url_for('static', filename='images/icons/smart_recomendation.png') }}" alt="Smart Recommendations" class="w-10 h-10 mt-1 object-contain"/>
         <div>
           <h3 class="font-bold text-base mb-2">Smart Recommendations</h3>
           <p class="text-blue-100 text-sm leading-relaxed">LocaFind menganalisis preferensi, budget, dan kategori pilihanmu untuk memberikan rekomendasi wisata yang paling relevan.</p>
         </div>
       </div>
       <div class="bg-blue-700 rounded-2xl p-6 text-white flex gap-4 items-start">
-        <div class="text-3xl mt-1">📋</div>
+        <img src="{{ url_for('static', filename='images/icons/automatic_itenary.png') }}" alt="Automatic Itinerary" class="w-10 h-10 mt-1 object-contain"/>
         <div>
           <h3 class="font-bold text-base mb-2">Automatic Itinerary</h3>
           <p class="text-blue-100 text-sm leading-relaxed">Tidak perlu lagi menyusun jadwal secara manual. LocaFind membuat itinerary lengkap secara otomatis.</p>
         </div>
       </div>
       <div class="bg-blue-700 rounded-2xl p-6 text-white flex gap-4 items-start">
-        <div class="text-3xl mt-1">🗺️</div>
+        <img src="{{ url_for('static', filename='images/icons/optimize_route.png') }}" alt="Optimized Route" class="w-10 h-10 mt-1 object-contain"/>
         <div>
           <h3 class="font-bold text-base mb-2">Optimized Route</h3>
           <p class="text-blue-100 text-sm leading-relaxed">Sistem secara otomatis mengurutkan destinasi berdasarkan jarak dan waktu tempuh agar perjalananmu lebih hemat dan nyaman.</p>
@@ -174,32 +182,44 @@
 
   <!-- KATEGORI -->
   <section class="py-12 bg-white">
-    <div class="max-w-4xl mx-auto px-6 text-center">
-      <h2 class="text-blue-700 text-2xl font-black mb-2">Temukan Kategori Wisata Pilihanmu</h2>
-      <p class="text-gray-500 text-sm mb-10">Pilih kategori favoritmu dan temukan destinasi yang sesuai dengan gaya perjalananmu</p>
-      <div class="grid grid-cols-4 gap-4">
-        <div class="category-card rounded-2xl overflow-hidden cursor-pointer shadow">
-          <img src="{{ url_for('static', filename='images/wisata.jpg') }}" alt="Wisata" class="w-full h-64 object-cover"/>
-          <div class="bg-white py-2 text-center font-semibold text-sm text-gray-700">Wisata</div>
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex flex-col lg:flex-row items-center justify-center gap-6">
+
+        <!-- Wisata (tall, kiri) -->
+        <div class="category-card rounded-2xl overflow-hidden cursor-pointer shadow w-full lg:w-56 order-1">
+          <img src="{{ url_for('static', filename='images/wisata.jpg') }}" alt="Wisata" class="w-full h-80 object-cover"/>
+          <div class="bg-white py-2 text-center font-semibold text-sm text-blue-700 border border-blue-100">Wisata</div>
         </div>
-        <div class="category-card rounded-2xl overflow-hidden cursor-pointer shadow">
-          <img src="{{ url_for('static', filename='images/mall.jpg') }}" alt="Pusat Perbelanjaan" class="w-full h-64 object-cover"/>
-          <div class="bg-white py-2 text-center font-semibold text-sm text-gray-700">Pusat Perbelanjaan</div>
+
+        <!-- Tengah: judul + 2 kartu -->
+        <div class="flex flex-col items-center text-center order-2 max-w-md">
+          <h2 class="text-blue-700 text-2xl font-black mb-2">Temukan Kategori Wisata Pilihanmu</h2>
+          <p class="text-gray-500 text-sm mb-6">Pilih kategori favoritmu dan temukan destinasi yang sesuai dengan gaya perjalananmu</p>
+          <div class="flex gap-4">
+            <div class="category-card rounded-2xl overflow-hidden cursor-pointer shadow w-40">
+              <img src="{{ url_for('static', filename='images/mall.jpg') }}" alt="Pusat Perbelanjaan" class="w-full h-44 object-cover"/>
+              <div class="bg-white py-2 text-center font-semibold text-xs text-blue-700 border border-blue-100">Pusat Perbelanjaan</div>
+            </div>
+            <div class="category-card rounded-2xl overflow-hidden cursor-pointer shadow w-40">
+              <img src="{{ url_for('static', filename='images/kuliner.jpg') }}" alt="Kuliner" class="w-full h-44 object-cover"/>
+              <div class="bg-white py-2 text-center font-semibold text-xs text-blue-700 border border-blue-100">Kuliner</div>
+            </div>
+          </div>
         </div>
-        <div class="category-card rounded-2xl overflow-hidden cursor-pointer shadow">
-          <img src="{{ url_for('static', filename='images/kuliner.jpg') }}" alt="Kuliner" class="w-full h-64 object-cover"/>
-          <div class="bg-white py-2 text-center font-semibold text-sm text-gray-700">Kuliner</div>
+
+        <!-- Cafe (tall, kanan) -->
+        <div class="category-card rounded-2xl overflow-hidden cursor-pointer shadow w-full lg:w-56 order-3">
+          <img src="{{ url_for('static', filename='images/cafe.jpg') }}" alt="Cafe" class="w-full h-80 object-cover"/>
+          <div class="bg-white py-2 text-center font-semibold text-sm text-blue-700 border border-blue-100">Cafe</div>
         </div>
-        <div class="category-card rounded-2xl overflow-hidden cursor-pointer shadow">
-          <img src="{{ url_for('static', filename='images/cafe.jpg') }}" alt="Cafe" class="w-full h-64 object-cover"/>
-          <div class="bg-white py-2 text-center font-semibold text-sm text-gray-700">Cafe</div>
-        </div>
+
       </div>
     </div>
   </section>
 
+  <!-- FOOTER -->
   <footer class="footer-bg py-16">
-    <div class="max-w-7xl mx-auto px-8 grid grid-cols-2 gap-8 items-center">
+    <div class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
       <div>
         <div class="flex items-center gap-3 mb-4">
           <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -216,7 +236,7 @@
     </div>
   </footer>
 
-<!-- SCRIPT HYBRID AI VALIDATION -->
+  <!-- SCRIPT HYBRID AI VALIDATION -->
   <script>
     const textarea = document.getElementById('narration');
     const warning = document.getElementById('prompt-warning');
@@ -227,9 +247,8 @@
 
     textarea.addEventListener('input', function() {
       const text = this.value.toLowerCase();
-      
-      // Jika teks kosong, kembalikan ke setelan awal (wajib isi filter)
-      if(text.length === 0) {
+
+      if (text.length === 0) {
         warning.classList.add('hidden');
         budgetInput.required = true;
         startTime.required = true;
@@ -237,31 +256,23 @@
         return;
       }
 
-      // 1. Deteksi masing-masing unsur secara terpisah
       const hasCategory = /(wisata|rekreasi|sejarah|taman|alam|museum|makan|kuliner|restoran|cafe|kafe|nongkrong|ngopi)/i.test(text);
       const hasBudget = /(\brp|\brupiah\b|\bribu\b|\d+rb\b|\b\d{4,}\b|\bbudget\b)/i.test(text);
-      
-      // PERBAIKAN: Hanya mendeteksi jika ada "jam [angka]", "pukul [angka]", atau format "08:00"
       const hasTime = /(\bjam\s+\d+|\bpukul\s+\d+|\d{1,2}:\d{2})/i.test(text);
 
-      // 2. Kumpulkan unsur yang hilang ke dalam sebuah list
       let missing = [];
       if (!hasCategory) missing.push("Kategori");
       if (!hasBudget) missing.push("Budget Wisata");
       if (!hasTime) missing.push("Durasi Jam (Angka)");
 
-      // 3. Logika Peringatan Dinamis berdasarkan list yang hilang
       if (missing.length > 0) {
-        // Hanya wajibkan input yang datanya tidak ada di prompt
         budgetInput.required = !hasBudget;
         startTime.required = !hasTime;
         endTime.required = !hasTime;
-        
-        // Buat kalimat peringatan yang menggabungkan kata-kata yang hilang
+
         warning.textContent = `💡 Tips AI: Kamu belum menyebutkan detail [${missing.join(', ')}] di ceritamu. Tolong lengkapi dengan mengisi filter di atas ya!`;
         warning.className = "text-xs p-2 rounded mt-2 border font-semibold transition-all text-blue-700 bg-blue-50 border-blue-200 block";
       } else {
-        // Buka semua kewajiban isi filter jika prompt sudah komplit
         budgetInput.required = false;
         startTime.required = false;
         endTime.required = false;
@@ -274,8 +285,7 @@
     form.addEventListener('submit', function(e) {
       const text = textarea.value.toLowerCase();
       const hasCategory = /(wisata|rekreasi|sejarah|taman|alam|museum|makan|kuliner|restoran|cafe|kafe|nongkrong|ngopi)/i.test(text);
-      
-      // Jika di prompt tidak ada kata kategori sama sekali, pastikan minimal ada 1 checkbox tercentang
+
       if (!hasCategory) {
         const checkboxes = document.querySelectorAll('.checkbox-kategori:checked');
         if (checkboxes.length === 0) {
@@ -284,23 +294,24 @@
         }
       }
     });
-  flatpickr("#start-time", {
+
+    flatpickr("#start-time", {
       enableTime: true,
       noCalendar: true,
       dateFormat: "H:i",
       time_24hr: true,
       defaultHour: 8,
       defaultMinute: 0
-  });
+    });
 
-  flatpickr("#end-time", {
+    flatpickr("#end-time", {
       enableTime: true,
       noCalendar: true,
       dateFormat: "H:i",
       time_24hr: true,
       defaultHour: 20,
       defaultMinute: 0
-  });
+    });
   </script>
 </body>
 </html>

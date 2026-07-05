@@ -10,7 +10,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     * { font-family: 'Inter', sans-serif; }
-    #map { height: 320px; width: 100%; border-radius: 12px; }
+    #map { height: 340px; width: 100%; border-radius: 12px; }
     .hero-bg {
       background-image: linear-gradient(to right, rgba(30, 64, 175, 0.85) 40%, rgba(30, 64, 175, 0.3) 100%),
         url("{{ url_for('static', filename='images/hero.jpg') }}");
@@ -23,6 +23,10 @@
       background-size: cover;
       background-position: center;
     }
+    .rekomendasi-btn { transition: transform 0.15s; }
+    .rekomendasi-btn:hover { transform: translateX(3px); }
+    .place-card { transition: transform 0.15s, box-shadow 0.15s; }
+    .place-card:hover { transform: translateY(-4px); box-shadow: 0 12px 20px -8px rgba(29,78,216,0.35); }
   </style>
 </head>
 <body class="bg-white text-gray-800">
@@ -39,11 +43,10 @@
     </div>
     <div class="flex items-center gap-8">
       <a href="/" class="text-white font-medium hover:text-blue-200">Home</a>
-      <a href="#" class="text-white font-medium hover:text-blue-200">Login</a>
     </div>
   </nav>
 
-  <!-- HERO KECIL -->
+  <!-- HERO -->
   <section class="hero-bg pt-14">
     <div class="max-w-7xl mx-auto px-8 py-12 flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -67,16 +70,70 @@
   <!-- MAIN CONTENT -->
   <section class="max-w-7xl mx-auto px-6 py-10">
 
+    <!-- RECAP PENCARIAN -->
+    <div class="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100 -mt-16 relative z-10 mb-10">
+      <p class="text-center text-blue-700 font-semibold text-base mb-6">
+        Masukkan budget, waktu perjalanan, dan preferensi. LocaFind akan menyusun itinerary terbaik untukmu
+      </p>
+      <hr class="border-gray-200 mb-6"/>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-5">
+
+        <div>
+          <label class="block text-blue-600 text-sm font-semibold mb-2">Kategori</label>
+          <div class="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-3 bg-gray-50">
+            <span class="text-blue-500">📍</span>
+            <span class="text-sm text-gray-700">
+              {% if kategori_terpilih %}
+                {{ kategori_terpilih | map('capitalize') | join(', ') }}
+              {% else %}
+                -
+              {% endif %}
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-blue-600 text-sm font-semibold mb-2">Budget Wisata</label>
+          <div class="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-3 bg-gray-50">
+            <span>💰</span>
+            <span class="text-sm text-gray-700">Rp{{ "{:,.0f}".format(budget_awal) }}</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-blue-600 text-sm font-semibold mb-2">Durasi Perjalanan</label>
+          <div class="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-3 bg-gray-50">
+            <span>🕐</span>
+            <span class="text-sm text-gray-700">{{ start_time }}</span>
+            <span class="text-gray-400">—</span>
+            <span>🕐</span>
+            <span class="text-sm text-gray-700">{{ end_time }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label class="block text-blue-600 text-sm font-semibold mb-2 text-center">Preferensi Tempat</label>
+        <div class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-600 bg-gray-50 text-center">
+          {{ narration if narration else "Tidak ada preferensi tertulis." }}
+        </div>
+      </div>
+    </div>
+
+    <a href="/" class="block w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 rounded-xl text-base text-center transition shadow-lg mb-10">
+      Cari Ulang Tempat Wisata 🔄
+    </a>
+
     <!-- PETA + REKOMENDASI TERATAS -->
-    <div class="flex gap-6 mb-10">
+    <div class="flex flex-col md:flex-row gap-6 mb-10">
       <div class="flex-1">
         <div id="map"></div>
       </div>
-      <div class="w-56 flex flex-col gap-2">
+      <div class="w-full md:w-56 flex flex-col gap-2">
         <h3 class="font-bold text-blue-700 text-base mb-1">Rekomendasi teratas</h3>
-        <!-- LOOPING TOMBOL REKOMENDASI -->
         {% for tempat in itinerary %}
-        <button class="bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg text-left hover:bg-blue-800 truncate" title="{{ tempat.Place_Name }}">
+        <button class="rekomendasi-btn bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg text-left hover:bg-blue-800 truncate" title="{{ tempat.Place_Name }}">
           {{ loop.index }}. {{ tempat.Place_Name }}
         </button>
         {% endfor %}
@@ -84,20 +141,19 @@
     </div>
 
     <!-- CARD TEMPAT -->
-    <div class="grid grid-cols-5 gap-3 mb-12">
-      <!-- LOOPING CARD -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
       {% for tempat in itinerary %}
-      <div class="bg-white rounded-xl shadow overflow-hidden border border-gray-100 flex flex-col">
-        <!-- GAMBAR DINAMIS -->
-        <img src="{{ url_for('static', filename=tempat.Image) }}" 
-             alt="{{ tempat.Place_Name }}" 
-             class="w-full h-24 object-cover"/>
-        <div class="p-2 flex-1 flex flex-col justify-between">
+      <div class="place-card bg-white rounded-xl shadow overflow-hidden border border-gray-100 flex flex-col">
+        <img src="{{ url_for('static', filename=tempat.Image) }}"
+             alt="{{ tempat.Place_Name }}"
+             class="w-full h-28 object-cover"/>
+        <div class="p-3 flex-1 flex flex-col justify-between">
           <div>
-            <h4 class="font-bold text-blue-700 text-xs mb-1 truncate" title="{{ tempat.Place_Name }}">{{ tempat.Place_Name }}</h4>
+            <h4 class="font-bold text-blue-700 text-sm mb-1 truncate" title="{{ tempat.Place_Name }}">{{ tempat.Place_Name }}</h4>
             <p class="text-xs text-gray-600 mb-1">Kategori: {{ tempat.Category }}</p>
-            <p class="text-xs text-gray-600 mb-1">Jarak: {{ tempat.Jarak }} km</p>
-            <p class="text-xs text-gray-600 mb-1">Biaya: Rp{{ "{:,.0f}".format(tempat.Price) }}</p>
+            <p class="text-xs text-gray-600 mb-1">Jam: {{ tempat.Time_Slot }}</p>
+            <p class="text-xs text-gray-600 mb-1">Estimasi Kunjungan: {{ tempat.Visit_Time }} menit</p>
+            <p class="text-xs text-gray-600 mb-1">Estimasi Pengeluaran: Rp{{ "{:,.0f}".format(tempat.Price) }}</p>
           </div>
           <div class="flex items-center gap-1 mt-1">
             <span class="text-yellow-400 text-xs">★★★★★</span>
@@ -109,152 +165,44 @@
     </div>
 
     <!-- TIMELINE ITINERARY -->
+    <h2 class="text-blue-700 text-xl font-black text-center mb-4">Timeline Itinerary</h2>
 
-    <h2 class="text-blue-700 text-xl font-black text-center mb-4">
-        Timeline Itinerary
-    </h2>
-
-    <div class="rounded-2xl overflow-hidden border border-gray-200 mb-12">
-
-    <table class="w-full text-sm">
-
-    <thead>
-
-    <tr class="bg-blue-700 text-white">
-
-        <th class="py-3 px-4 text-center">
-            Berangkat
-        </th>
-
-        <th class="py-3 px-4 text-center">
-            Tiba
-        </th>
-
-        <th class="py-3 px-4 text-left">
-            Destinasi
-        </th>
-
-        <th class="py-3 px-4 text-center">
-            Aktivitas
-        </th>
-
-        <th class="py-3 px-4 text-center">
-            Perjalanan
-        </th>
-
-        <th class="py-3 px-4 text-center">
-            Durasi
-        </th>
-
-        <th class="py-3 px-4 text-center">
-            Biaya
-        </th>
-
-    </tr>
-
-    </thead>
-
-    <tbody>
-
-    {% for tempat in itinerary %}
-
-    <tr class="border-b {% if loop.index is odd %}bg-gray-50{% endif %} hover:bg-blue-50">
-
-        <td class="py-4 px-4 text-center font-semibold">
-
-            {{ tempat.Departure_From_Previous }}
-
-        </td>
-
-        <td class="py-4 px-4 text-center font-semibold text-blue-700">
-
-            {{ tempat.Arrival_Time }}
-
-        </td>
-
-        <td class="py-4 px-4">
-
-            {% if tempat.Category|lower == "wisata" %}
-
-            🏛️
-
-            {% elif tempat.Category|lower == "kuliner" %}
-
-            🍽️
-
-            {% elif tempat.Category|lower == "cafe" %}
-
-            ☕
-
-            {% elif tempat.Category|lower == "pusat perbelanjaan" %}
-
-            🛍️
-
-            {% else %}
-
-            📍
-
-            {% endif %}
-
-            <strong>{{ tempat.Place_Name }}</strong>
-
-        </td>
-
-        <td class="py-4 px-4 text-center">
-
-            {{ tempat.Category }}
-
-            <br>
-
-            <span class="text-xs text-gray-500">
-
-                sampai {{ tempat.Visit_End }}
-
-            </span>
-
-        </td>
-
-        <td class="py-4 px-4 text-center">
-
-            🚗 {{ tempat.Travel_Time }} menit
-
-            <br>
-
-            <span class="text-xs text-gray-500">
-
-                {{ tempat.Jarak }} km
-
-            </span>
-
-        </td>
-
-        <td class="py-4 px-4 text-center">
-
-            {{ tempat.Visit_Time }} menit
-
-        </td>
-
-        <td class="py-4 px-4 text-center font-semibold text-green-700">
-
-            Rp{{ "{:,.0f}".format(tempat.Price) }}
-
-        </td>
-
-    </tr>
-
-    {% endfor %}
-
-    </tbody>
-
-    </table>
-
+    <div class="mb-12 max-w-4xl mx-auto">
+      <table class="w-full text-sm" style="border-collapse: separate; border-spacing: 6px;">
+        <thead>
+          <tr>
+            <th class="bg-blue-700 text-white rounded-lg py-2.5 px-4 text-center font-semibold">Tempat</th>
+            <th class="bg-blue-700 text-white rounded-lg py-2.5 px-4 text-center font-semibold">Jam</th>
+            <th class="bg-blue-700 text-white rounded-lg py-2.5 px-4 text-center font-semibold">Waktu Tempuh</th>
+            <th class="bg-blue-700 text-white rounded-lg py-2.5 px-4 text-center font-semibold">Estimasi Biaya</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tempat in itinerary %}
+          <tr>
+            <td class="border-2 border-blue-700 rounded-lg py-2.5 px-4 text-center font-bold text-blue-700 bg-white">
+              {{ tempat.Place_Name }}
+            </td>
+            <td class="border-2 border-blue-700 rounded-lg py-2.5 px-4 text-center font-bold text-blue-700 bg-white">
+              {{ tempat.Time_Slot }}
+            </td>
+            <td class="border-2 border-blue-700 rounded-lg py-2.5 px-4 text-center font-bold text-blue-700 bg-white">
+              🚗 {{ tempat.Travel_Time }} menit
+            </td>
+            <td class="border-2 border-blue-700 rounded-lg py-2.5 px-4 text-center font-bold text-blue-700 bg-white">
+              Rp{{ "{:,.0f}".format(tempat.Price) }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
 
     <!-- TRIP SUMMARY -->
     <h2 class="text-blue-700 text-xl font-black text-center mb-6">Trip Summary</h2>
     <div class="relative rounded-2xl overflow-hidden bg-gray-100 p-8 mb-6"
          style="background-image: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url('{{ url_for('static', filename='images/hero.jpg') }}'); background-size: cover; background-position: center;">
-      <div class="grid grid-cols-4 gap-4 mb-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div class="bg-blue-700 rounded-xl p-4 text-center text-white">
           <p class="text-xs font-semibold mb-1">Tempat Terpilih</p>
           <p class="text-4xl font-black">{{ itinerary|length }}</p>
@@ -264,8 +212,8 @@
           <p class="text-2xl font-black mt-2">Rp{{ "{:,.0f}".format(total_budget) }}</p>
         </div>
         <div class="bg-blue-700 rounded-xl p-4 text-center text-white">
-          <p class="text-xs font-semibold mb-1">Budget Tersedia</p>
-          <p class="text-2xl font-black mt-2">Rp{{ "{:,.0f}".format(budget_awal) }}</p>
+          <p class="text-xs font-semibold mb-1">Durasi Total</p>
+          <p class="text-2xl font-black mt-2">{{ total_durasi }}</p>
         </div>
         <div class="bg-blue-700 rounded-xl p-4 text-center text-white">
           <p class="text-xs font-semibold mb-1">Total Jarak</p>
@@ -273,10 +221,12 @@
         </div>
       </div>
       <div class="text-center">
-        <p class="text-gray-600 font-semibold text-sm mb-3">Status Rute AI</p>
-        <div class="flex justify-center gap-4">
-          <span class="bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-semibold">Sesuai Kategori</span>
-          <span class="bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-semibold">Optimasi Jarak Aktif</span>
+        <p class="text-gray-600 font-semibold text-sm mb-3">Status</p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <span class="bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-semibold">
+            {% if remaining_budget >= 0 %}Sesuai Budget{% else %}Budget Terlampaui{% endif %}
+          </span>
+          <span class="bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-semibold">Semua Tempat Masih Buka</span>
         </div>
       </div>
     </div>
@@ -285,7 +235,7 @@
 
   <!-- FOOTER -->
   <footer class="footer-bg py-16">
-    <div class="max-w-7xl mx-auto px-8 grid grid-cols-2 gap-8 items-center">
+    <div class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
       <div>
         <div class="flex items-center gap-3 mb-4">
           <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -303,10 +253,6 @@
   </footer>
 
   <script>
-  // ==============================
-  // Inisialisasi Map
-  // ==============================
-
   var itineraryData = {{ itinerary | tojson }};
   var startingPoint = {{ starting_point | tojson }};
 
@@ -317,24 +263,12 @@
 
   L.tileLayer(
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      {
-          attribution:'© OpenStreetMap contributors'
-      }
+      { attribution:'© OpenStreetMap contributors' }
   ).addTo(map);
-
-
-  // ==============================
-  // Marker Lokasi Awal User
-  // ==============================
-
-  // ==============================
-  // Icon Merah untuk Lokasi User
-  // ==============================
 
   var redIcon = new L.Icon({
       iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
       shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
@@ -348,76 +282,19 @@
 
   userMarker.bindPopup("<b>📍 Lokasi Awal Anda</b>");
 
+  var latlngs = [[startingPoint.Lat, startingPoint.Lon]];
+  var bounds = L.latLngBounds([[startingPoint.Lat, startingPoint.Lon]]);
 
-  // ==============================
-  // Route dimulai dari User
-  // ==============================
-
-  var latlngs = [
-      [
-          startingPoint.Lat,
-          startingPoint.Lon
-      ]
-  ];
-
-  var bounds = L.latLngBounds([
-      [
-          startingPoint.Lat,
-          startingPoint.Lon
-      ]
-  ]);
-
-
-  // ==============================
-  // Marker Destinasi
-  // ==============================
-
-  itineraryData.forEach(function(tempat,index){
-
-      var marker = L.marker([
-          tempat.Lat,
-          tempat.Long
-      ]).addTo(map);
-
-      marker.bindPopup(
-          "<b>"+(index+1)+". "+tempat.Place_Name+"</b>"
-      );
-
-      latlngs.push([
-          tempat.Lat,
-          tempat.Long
-      ]);
-
-      bounds.extend([
-          tempat.Lat,
-          tempat.Long
-      ]);
-
+  itineraryData.forEach(function(tempat, index) {
+      var marker = L.marker([tempat.Lat, tempat.Long]).addTo(map);
+      marker.bindPopup("<b>" + (index + 1) + ". " + tempat.Place_Name + "</b>");
+      latlngs.push([tempat.Lat, tempat.Long]);
+      bounds.extend([tempat.Lat, tempat.Long]);
   });
 
+  L.polyline(latlngs, { color: "#2563eb", weight: 4, opacity: 0.8 }).addTo(map);
 
-  // ==============================
-  // Polyline
-  // ==============================
-
-  L.polyline(
-      latlngs,
-      {
-          color:"#2563eb",
-          weight:4,
-          opacity:0.8
-      }
-  ).addTo(map);
-
-
-  // ==============================
-  // Zoom otomatis
-  // ==============================
-
-  map.fitBounds(bounds,{
-      padding:[40,40]
-  });
-
+  map.fitBounds(bounds, { padding: [40, 40] });
   </script>
 </body>
 </html>

@@ -426,7 +426,26 @@ def recommend():
 
         total_jarak += dest["Jarak"]
         total_biaya += harga
-    
+
+    # ==========================
+    # Durasi Total (untuk Trip Summary)
+    # ==========================
+
+    total_durasi_menit = sum(
+        item["Travel_Time"] + item["Visit_Time"]
+        for item in hasil_itinerary
+    )
+
+    jam = total_durasi_menit // 60
+    menit = total_durasi_menit % 60
+
+    if jam > 0 and menit > 0:
+        total_durasi = f"{jam} Jam {menit} Menit"
+    elif jam > 0:
+        total_durasi = f"{jam} Jam"
+    else:
+        total_durasi = f"{menit} Menit"
+
     starting_point = {
         "Lat": user_lat,
         "Lon": user_lon
@@ -455,8 +474,22 @@ def recommend():
         remaining_budget=remaining_budget,
 
         starting_point=starting_point,
-        
-        maps_url=maps_url
+
+        maps_url=maps_url,
+
+        # ==========================
+        # Recap Pencarian (untuk ditampilkan di hasil.html)
+        # ==========================
+
+        kategori_terpilih=kategori_terpilih,
+
+        narration=narration,
+
+        start_time=start_time_str,
+
+        end_time=end_time_str,
+
+        total_durasi=total_durasi
 
     )
 
